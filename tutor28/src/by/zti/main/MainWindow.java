@@ -6,6 +6,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -39,6 +41,8 @@ public class MainWindow extends JFrame {
 	private JLabel imagelabel;
 	private JPanel panel;
 	private JScrollPane scrollPane;
+	private JButton btnGetImage;
+	private JButton btnGetFile;
 
 	public MainWindow(int width, int height) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -61,8 +65,8 @@ public class MainWindow extends JFrame {
 		txtrEnterUrlHere.setBounds(64, 37, 440, 239);
 		panel1.add(txtrEnterUrlHere);
 		
-		btnNewButton = new JButton("Get Image");
-		btnNewButton.addActionListener(new ActionListener() {
+		btnGetImage = new JButton("Get Image");
+		btnGetImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
 				try {
@@ -73,19 +77,26 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
-		btnNewButton.setBounds(10, 3, 166, 23);
-		panel1.add(btnNewButton);
+		btnGetImage.setBounds(10, 3, 166, 23);
+		panel1.add(btnGetImage);
 		
-		btnNewButton_1 = new JButton("Get File");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		btnGetFile = new JButton("Get File");
+		
+		btnGetFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				JFileChooser chouser=new JFileChooser();
+				int reply = chouser.showOpenDialog(null);
+				if(reply==JFileChooser.APPROVE_OPTION){
+					Main.setImage(chouser.getSelectedFile());
+				}
 			}
 		});
-		btnNewButton_1.setBounds(267, 3, 159, 23);
-		panel1.add(btnNewButton_1);
-		tabbedPane.addTab("Tab2", panel2);
-		panel2.setLayout(null);
 		
+		btnGetFile.setBounds(267, 3, 159, 23);
+		panel1.add(btnGetFile);
+		tabbedPane.addTab("Tab2", panel2);
+		
+		panel2.setLayout(null);
 		choice = new Choice();
 		choice.setBounds(450, 40, 51, 20);
 		panel2.add(choice);
@@ -126,16 +137,39 @@ public class MainWindow extends JFrame {
 		mnFile = new JMenu("File");
 		menuBar.add(mnFile);
 		
+		
 		mntmSaveImage = new JMenuItem("Save Image");
+		mntmSaveImage.addActionListener(new ActionListener(){
+
+			
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chouser=new JFileChooser();
+				int reply=chouser.showSaveDialog(null);
+				if(reply==JFileChooser.APPROVE_OPTION){
+					Main.saveImage(chouser.getSelectedFile(), choice.getSelectedItem());
+					
+				}
+			}
+			
+		});
+		
 		mnFile.add(mntmSaveImage);
 		
 		mnOptions = new JMenu("Options");
 		menuBar.add(mnOptions);
 		
 		mntmExit = new JMenuItem("Exit");
-		mnOptions.add(mntmExit);
+		mntmExit.addActionListener (new ActionListener() {
 		
-		setVisible(true);
 		
+	public void actionPerformed(ActionEvent e) {
+			System.exit(0);
+			
+
 	}
-}
+		});
+	mnOptions.add(mntmExit);
+	
+	setVisible(true);
+	}
+	}
